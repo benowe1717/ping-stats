@@ -3,6 +3,7 @@
 import argparse
 import re
 
+from src.classes.file_checker import FileChecker
 from src.constants import constants
 
 
@@ -18,6 +19,7 @@ class ParseArgs():
         self.parser = argparse.ArgumentParser(
             prog=self.NAME, description=self.DESC)
         self.ips = []
+        self.config = ''
 
         self.parser.add_argument(
             '-v',
@@ -33,6 +35,14 @@ class ParseArgs():
             required=False,
             help='The IP Addresses you want to monitor')
 
+        self.parser.add_argument(
+            '-c',
+            '--config',
+            nargs=1,
+            required=False,
+            help='Optionally specify the full path to a custom config file'
+        )
+
         self.parse_args = self.parser.parse_args()
 
         if len(self.args) == 1:
@@ -45,6 +55,19 @@ class ParseArgs():
 
         if self.parse_args.ips:
             self.ips = self._sanitize_ips()
+
+        if self.parse_args.config:
+            fc = FileChecker(self.parse_args.config[0])
+            if not fc.is_file():
+                self.parser.error(f'{fc.file} is not a valid file!')
+
+            if not fc.is_readable():
+                self.parser.error(f'{fc.file} is not readable!')
+
+            if not fc.is_yaml():
+                self.parser.error(f'{fc.file} is not valid YAML!')
+
+            self.config = fc.file
 
     def _print_version(self) -> None:
         print(f'{self.NAME} v{self.VERSION}')

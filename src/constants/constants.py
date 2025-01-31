@@ -8,3 +8,5 @@ ARGPARSE_PROGRAM_DESCRIPTION += 'their latency from you to your destination.'
 ARGPARSE_VERSION = '0.0.1'
 ARGPARSE_AUTHOR = 'Benjamin Owen'
 ARGPARSE_REPO = 'https://github.com/benowe1717/ping-stats'
+
+CONFIG_FILE = 'src/configs/config.yaml'
