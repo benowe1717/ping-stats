@@ -7,6 +7,8 @@ import sys
 
 from src.classes.parseargs import ParseArgs
 from src.classes.mtr import MTR
+from src.classes.promfile import PromFile
+from src.constants import constants
 
 
 def combine_traces(traces: list) -> dict:
@@ -50,29 +52,56 @@ def calculate_averages(traces: dict) -> dict:
     return traces
 
 
-def main():
+def main() -> int:
     """Main program loop"""
     args = sys.argv
     parseargs = ParseArgs(args)
 
     if len(parseargs.ips) == 0:
         print('ERROR: No IPs found!')
-        sys.exit(1)
+        return -1
 
-    traces = []
-    mtr = MTR(parseargs.ips)
-    for ip in mtr.ips:
-        mtr.run_mtr(ip)
-        results = mtr.parse_output()
-        if len(results) == 0:
-            continue
+    # If the user passed us a custom config, use that
+    # otherwise, take the default
+    if parseargs.config:
+        config_file = parseargs.config
+    else:
+        config_file = constants.CONFIG_FILE
 
-        for result in results:
-            traces.append(result)
+    try:
+        promfile = PromFile(config_file)
 
-    combined_traces = combine_traces(traces)
-    averaged_traces = calculate_averages(combined_traces)
+    except KeyError as e:
+        print(e)
+        return -1
+
+    result = promfile.create_filepath()
+    if not result:
+        return -1
+
+    result = promfile.create_temp_filepath()
+    if not result:
+        return -1
+
+    return 0
+
+    # traces = []
+    # mtr = MTR(parseargs.ips)
+    # for ip in mtr.ips:
+    #     mtr.run_mtr(ip)
+    #     results = mtr.parse_output()
+    #     if len(results) == 0:
+    #         continue
+    #
+    #     for result in results:
+    #         traces.append(result)
+    #
+    # combined_traces = combine_traces(traces)
+    # averaged_traces = calculate_averages(combined_traces)
 
 
 if __name__ == '__main__':
-    main()
+    RESULT = main()
+    if RESULT != 0:
+        sys.exit(1)
+    sys.exit(0)
