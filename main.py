@@ -8,6 +8,7 @@ import yaml
 
 from src.classes.parseargs import ParseArgs
 from src.classes.promfile import PromFile
+from src.classes.which import Which
 from src.constants import constants
 
 
@@ -19,6 +20,10 @@ def main() -> int:
     config = read_config_file(config_file)
     result = prometheus_setup(config)
     if not result:
+        return -1
+
+    mtr_binary = find_mtr()
+    if not mtr_binary:
         return -1
 
     return 0
@@ -84,6 +89,21 @@ def prometheus_setup(config: dict) -> bool:
     except ValueError as e:
         print(e)
         return False
+
+
+def find_mtr() -> str:
+    """
+    Attempt to locate the full filepath to the mtr binary
+
+    :return: The full filepath to the mtr binary, or empty if the binary
+    cannot be located
+    :rtype: str
+    """
+    which = Which()
+    result = which.find_command('mtr')
+    if not result:
+        return ''
+    return which.command
 
 
 if __name__ == '__main__':
