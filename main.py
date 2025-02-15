@@ -7,6 +7,7 @@ import sys
 import yaml
 
 from src.classes.parseargs import ParseArgs
+from src.classes.promfile import PromFile
 from src.constants import constants
 
 
@@ -15,6 +16,10 @@ def main() -> int:
     args = sys.argv
     parseargs = ParseArgs(args)
     config_file = get_config_file(parseargs)
+    config = read_config_file(config_file)
+    result = prometheus_setup(config)
+    if not result:
+        return -1
 
     return 0
 
@@ -46,6 +51,39 @@ def read_config_file(config_file: str) -> dict:
     with open(config_file, 'r', encoding='utf-8') as file:
         data = yaml.safe_load(file)
         return data
+
+
+def prometheus_setup(config: dict) -> bool:
+    """
+    Ensure all required Prometheus directories are present and create them
+    if they are not present
+
+    :param config: A dictionary containing the current configuration
+    :type config: dict
+    :return: True if all Prometheus directories are present,
+    False if directories are not present
+    :rtype: bool
+    """
+    try:
+        promfile = PromFile(config)
+
+        result = promfile.create_filepath()
+        if not result:
+            return False
+
+        result = promfile.create_temp_filepath()
+        if not result:
+            return False
+
+        return True
+
+    except KeyError as e:
+        print(e)
+        return False
+
+    except ValueError as e:
+        print(e)
+        return False
 
 
 if __name__ == '__main__':
