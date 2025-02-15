@@ -3,6 +3,7 @@
 Gather statistics about all IPs in your route to a destination
 """
 
+import concurrent.futures
 import sys
 import yaml
 
@@ -33,6 +34,18 @@ def main() -> int:
     except KeyError as e:
         print(e)
         return -1
+
+    traces = []
+    with concurrent.futures.ThreadPoolExecutor(
+            max_workers=len(ips)) as executor:
+        future_to_ip = {
+            executor.submit(
+                run_mtr,
+                mtr_binary,
+                ip): ip for ip in ips}
+        for future in concurrent.futures.as_completed(future_to_ip):
+            data = future.result()
+            traces.append(data)
 
     return 0
 
