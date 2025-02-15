@@ -1,89 +1,106 @@
 #!/usr/bin/env python3
 """
-MTR wrapper in Python
+MTR() class file
 """
 
 import re
 import subprocess
-import sys
-
-from src.classes.which import Which
 
 
 class MTR:
     """
-    MTR wrapper in Python
+    Execute the mtr binary, capture its output, and parse out the key details
+    per IP Address into a dictionary called a trace
     """
 
-    mtr = None
-    raw_output = []
-    error = {}
-    ips = []
-    traces = {}
+    IP4_PATTERN = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
 
-    def __init__(self, ips: list) -> None:
-        which = Which()
-        result = which.find_command('mtr')
-        if not result:
-            sys.exit(1)
-        self.mtr = which.command
-        self.ips = ips
-        for ip in self.ips:
-            if not self.validate_ips(ip):
-                print(f'ERROR: {ip} is not a valid IPv4 Address!')
-                print(f'{ip} has been removed from the list!')
-                index = self.ips.index(ip)
-                self.ips.pop(index)
+    def __init__(self, mtr_binary: str) -> None:
+        self.mtr_binary = mtr_binary
+        self.mtr_stdout = ''
+        self.trace = {}
+        self.error = {}
 
-    def validate_ips(self, ip: str) -> bool:
+    @property
+    def ip(self) -> str:
         """
-        Validate that the given string is a valid IPv4 Address.
-        """
-        pattern = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
-        if re.match(pattern, ip):
-            return True
-        return False
+        ip.getter
 
-    def run_mtr(self, ip: str) -> bool:
+        :return: The IPv4 Address to execute an mtr against
+        :rtype: str
         """
-        Execute the mtr binary and capture its output
+        return self._ip
+
+    @ip.setter
+    def ip(self, ip: str) -> None:
+        """
+        ip.setter
+
+
+        :param ip: An IPv4 Address
+        :type ip: str
+        :raise ValueError: If the string is not in IPv4 Address format
+        :return: None
+        :rtype: None
+        """
+        if re.match(self.IP4_PATTERN, ip):
+            self._ip = ip
+        else:
+            raise ValueError(f'{ip} is not a valid IPv4 Address!')
+
+    def run_mtr(self) -> bool:
+        """
+        Execute the mtr binary and capture its output in the self.mtr_stdout
+        property
+
+        :return: True if mtr exits with exit code 0, False if mtr exits with
+        a non-zero exit code
+        :rtype: bool
         """
         cmd = [
-            self.mtr, '-4', '--no-dns', '--report', '--report-cycles', '4',
-            ip
+            self.mtr_binary, '-4', '--no-dns', '--report', '--report-cycles',
+            '4', self.ip
         ]
         try:
             output = subprocess.run(cmd, capture_output=True, check=True)
             if output.returncode == 0:
-                self.raw_output = output.stdout.decode('utf-8')
+                self.mtr_stdout = output.stdout.decode('utf-8')
                 return True
-            return False
-        except subprocess.CalledProcessError as e:
-            self.error.update(
-                {
-                    'returncode': e.returncode,
-                    'stdout': e.stdout,
-                    'stderr': e.stderr,
-                    'command': e.cmd
-                }
-            )
+            self.error.update({
+                'returncode': output.returncode,
+                'stdout': output.stdout.decode('utf-8'),
+                'stderr': output.stderr.decode('utf-8'),
+                'command': output.args
+            })
             return False
 
-    def parse_output(self) -> list:
+        except subprocess.CalledProcessError as e:
+            self.error.update({
+                'returncode': e.returncode,
+                'stdout': e.stdout,
+                'stderr': e.stderr,
+                'command': e.cmd
+            })
+            return False
+
+    def parse_mtr_stdout(self) -> bool:
         """
-        Parse the output from run_mtr() method
+        Parse the output in self.mtr_stdout into a dictionary and store in
+        self.trace
+
+        :return: True when parsing is complete
+        :rtype: bool
         """
-        traces = []
-        lines = self.raw_output.split('\n')  # type: ignore
-        prematch = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
-        pattern = re.compile(r"""^\s+\d{1,2}\.\|\-\-\s+
-        (?P<ip_addr>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+
-        (?P<loss>\d{1,3}\.\d+)\%\s+(?P<packets>\d)\s+(?P<last>\d+\.\d+)\s+
-        (?P<average>\d+\.\d+)\s+(?P<best>\d+\.\d+)\s+(?P<worst>\d+\.\d+)\s+
-        (?P<stdev>\d+\.\d+)$""", re.X)
+        lines = self.mtr_stdout.split('\n')
+        prematch = re.compile(self.IP4_PATTERN.split('^', maxsplit=1)[-1])
+        pattern = re.compile(
+            r"""^\s+\d{1,2}\.\|\-+\s+(?P<ip_addr>\d+\.\d+\.\d+\.\d+)\s+
+            (?P<loss>\d+\.\d+)\%\s+(?P<sent>\d+)\s+(?P<last>\d+\.\d+)\s+
+            (?P<average>\d+\.\d+)\s+(?P<best>\d+\.\d+)\s+
+            (?P<worst>\d+\.\d+)\s+(?P<stdev>\d+\.\d+)$""", re.X
+        )
 
         for line in lines:
-            trace = {}
             result = re.search(prematch, line)
             if not result:
                 continue
@@ -92,16 +109,14 @@ class MTR:
             if not matches:
                 continue
 
-            trace.update({
-                'ip_addr': matches['ip_addr'],
+            self.trace[matches['ip_addr']] = {
                 'loss': float(matches['loss']),
-                'sent': int(matches['packets']),
+                'sent': int(matches['sent']),
                 'last': float(matches['last']),
                 'average': float(matches['average']),
                 'best': float(matches['best']),
                 'worst': float(matches['worst']),
-                'stdev': float(matches['stdev']),
-            })
-            traces.append(trace)
+                'stdev': float(matches['stdev'])
+            }
 
-        return traces
+        return True

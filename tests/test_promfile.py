@@ -9,7 +9,6 @@ import unittest
 from unittest.mock import patch
 
 from src.classes.promfile import PromFile
-from src.constants import constants
 
 
 class TestPromFile(unittest.TestCase):

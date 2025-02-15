@@ -11,3 +11,7 @@ prometheus:
   temp_filepath: '/tmp/prometheus'
   filename: 'ping_stats.prom'
   # temp_filename: 'ping_stats.temp.prom'
+
+mtr:
+  ips:
+    - 127.0.0.1
