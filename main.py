@@ -47,6 +47,9 @@ def main() -> int:
             data = future.result()
             traces.append(data)
 
+    combined_traces = combine_traces(traces)
+    averaged_traces = average_traces(combined_traces)
+
     return 0
 
 
@@ -151,6 +154,50 @@ def run_mtr(mtr_binary: str, ip: str) -> dict:
         return {}
 
     return mtr.trace
+
+
+def combine_traces(traces: list) -> dict:
+    """
+    Take in a list of dicts, where the list represents all traces, and each
+    item in the list is a trace represented in dictionary format.
+    Return a dictionary where each key represents a unique IP and
+    contains all values from all traces against that IP
+
+    :param traces: The list of traces
+    :type traces: list
+    :return: A dictionary containing each combined trace
+    :rtype: dict
+    """
+    combined_traces = {}
+    for trace in traces:
+        for ip_addr, values in trace.items():
+            if ip_addr not in combined_traces:
+                combined_traces.update({ip_addr: {}})
+
+            for key, value in values.items():
+                try:
+                    combined_traces[ip_addr][key].append(value)
+                except KeyError:
+                    combined_traces[ip_addr][key] = [value]
+
+    return combined_traces
+
+
+def average_traces(traces: dict) -> dict:
+    """
+    Iterate over each trace, represented by a dictionary, and average out
+    all values
+
+    :param traces: A dictionary of all traces
+    :type traces: dict
+    :return: A dictionary of all traces with averaged values
+    :rtype: dict
+    """
+    for _, values in traces.items():
+        for key, value in values.items():
+            average = round(sum(value) / len(value), 1)
+            values[key] = average
+    return traces
 
 
 if __name__ == '__main__':
