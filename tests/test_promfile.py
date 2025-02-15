@@ -3,6 +3,7 @@
 Unit Tests for the PromFile() class
 """
 
+import os
 import unittest
 
 from unittest.mock import patch
@@ -17,68 +18,103 @@ class TestPromFile(unittest.TestCase):
     """
 
     def setUp(self) -> None:
-        self.promfile = PromFile(constants.CONFIG_FILE)
+        self.config = {
+            'prometheus': {
+                'filepath': './data/var/prometheus',
+                'temp_filepath': 'data/tmp/prometheus',
+                'filename': 'ping-stats.prom'
+            }
+        }
+        self.promfile = PromFile(self.config)
         return super().setUp()
 
     def tearDown(self) -> None:
+        del self.config
         del self.promfile
         return super().tearDown()
 
-    def test_bad_file(self) -> None:
-        """Test that all config values are blank when a bad file is passed"""
-        file = 'fjeijwiefjaweifj;awiejf'
-        with self.assertRaises(SystemExit):
-            promfile = PromFile(file)
-            self.assertIsNone(promfile.filepath)
-            self.assertIsNone(promfile.temp_filepath)
-            self.assertIsNone(promfile.filename)
-            self.assertIsNone(promfile.temp_filename)
+    def test_missing_config_section(self) -> None:
+        """
+        Assert raise KeyError when 'prometheus' key is missing in config
+        dict
+        """
+        config = {
+            'mtr': {
+                'ips': [
+                    '1.1.1.1'
+                ]
+            }
+        }
+        with self.assertRaises(KeyError):
+            PromFile(config)
 
-    def test_file_unreadable(self) -> None:
+    def test_missing_config_key(self) -> None:
         """
-        Test that all config values are blank when an unreadable file is
-        passed
+        Assert raise ValueError when one of any required keys is missing
+        in config dict
         """
-        file = '/swapfile'
+        config = {
+            'prometheus': {
+                'filepath': './data/var/prometheus'
+            }
+        }
         with self.assertRaises(ValueError):
-            promfile = PromFile(file)
-            self.assertIsNone(promfile.filepath)
-            self.assertIsNone(promfile.temp_filepath)
-            self.assertIsNone(promfile.filename)
-            self.assertIsNone(promfile.temp_filename)
+            PromFile(config)
 
-    def test_file_not_yaml(self) -> None:
+    def test_invalid_key_in_config(self) -> None:
         """
-        Test that all config values are blank when an invalid YAML file
-        is passed
+        Assert raise ValueError when an unknown key exists in config dict
         """
-        file = './README.md'
+        self.config['prometheus'].update({'invalid': 'something'})
         with self.assertRaises(ValueError):
-            promfile = PromFile(file)
-            self.assertIsNone(promfile.filepath)
-            self.assertIsNone(promfile.temp_filepath)
-            self.assertIsNone(promfile.filename)
-            self.assertIsNone(promfile.temp_filename)
+            PromFile(self.config)
 
-    def test_filepath(self) -> None:
-        """Test filepath is what we expect"""
-        self.assertIsInstance(self.promfile.filepath, str)
-        self.assertEqual(self.promfile.filepath, '/var/prometheus')
+    def test_valid_config_no_temp_filename(self) -> None:
+        """
+        Assert config is valid when all required keys are passed
+        """
+        self.assertEqual(
+            self.promfile.filepath,
+            os.path.realpath(self.config['prometheus']['filepath'])
+        )
+        self.assertEqual(
+            self.promfile.filename,
+            self.config['prometheus']['filename']
+        )
+        self.assertEqual(
+            self.promfile.temp_filepath,
+            os.path.realpath(self.config['prometheus']['temp_filepath'])
+        )
+        self.assertEqual(
+            self.promfile.temp_filename,
+            self.config['prometheus']['filename']
+        )
 
-    def test_temp_filepath(self) -> None:
-        """Test temp_filepath is what we expect"""
-        self.assertIsInstance(self.promfile.temp_filepath, str)
-        self.assertEqual(self.promfile.temp_filepath, '/tmp/prometheus')
-
-    def test_filename(self) -> None:
-        """Test filename is what we expect"""
-        self.assertIsInstance(self.promfile.filename, str)
-        self.assertEqual(self.promfile.filename, 'ping_stats.prom')
-
-    def test_temp_filename(self) -> None:
-        """Test temp_filename is what we expect"""
-        self.assertIsInstance(self.promfile.temp_filename, str)
-        self.assertEqual(self.promfile.temp_filename, '')
+    def test_valid_config_temp_filename_given(self) -> None:
+        """
+        Assert config is valid when all required keys are passed and the
+        optional temp_filename key is passed
+        """
+        self.config['prometheus'].update({
+            'temp_filename': 'temp-ping-stats.prom'
+        })
+        promfile = PromFile(self.config)
+        self.assertEqual(
+            promfile.filepath,
+            os.path.realpath(self.config['prometheus']['filepath'])
+        )
+        self.assertEqual(
+            promfile.filename,
+            self.config['prometheus']['filename']
+        )
+        self.assertEqual(
+            promfile.temp_filepath,
+            os.path.realpath(self.config['prometheus']['temp_filepath'])
+        )
+        self.assertEqual(
+            promfile.temp_filename,
+            self.config['prometheus']['temp_filename']
+        )
 
     @patch('src.classes.promfile.os.mkdir', side_effect=FileNotFoundError)
     def test_create_filepath_failed_missing_parent_directory(
