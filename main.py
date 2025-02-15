@@ -6,6 +6,7 @@ Gather statistics about all IPs in your route to a destination
 import sys
 import yaml
 
+from src.classes.mtr import MTR
 from src.classes.parseargs import ParseArgs
 from src.classes.promfile import PromFile
 from src.classes.which import Which
@@ -24,6 +25,13 @@ def main() -> int:
 
     mtr_binary = find_mtr()
     if not mtr_binary:
+        return -1
+
+    try:
+        ips = config['mtr']['ips']
+
+    except KeyError as e:
+        print(e)
         return -1
 
     return 0
@@ -104,6 +112,32 @@ def find_mtr() -> str:
     if not result:
         return ''
     return which.command
+
+
+def run_mtr(mtr_binary: str, ip: str) -> dict:
+    """
+    Using the MTR() class, run a traceroute to the given IP Address using the
+    given mtr binary and return the formatted trace
+
+    :param mtr_binary: The full filepath to the mtr binary
+    :type mtr_binary: str
+    :param ip: The IPv4 Address to provide to the mtr binary
+    :type ip: str
+    :return: The trace dictionary if the trace was successful,
+    an empty dictionary if the trace failed
+    :rtype: dict
+    """
+    mtr = MTR(mtr_binary)
+    mtr.ip = ip
+    result = mtr.run_mtr()
+    if not result:
+        return {}
+
+    result = mtr.parse_mtr_stdout()
+    if not result:
+        return {}
+
+    return mtr.trace
 
 
 if __name__ == '__main__':

@@ -16,30 +16,48 @@ class TestMTR(unittest.TestCase):
     Unit Tests for the MTR() class
     """
 
-    ips = ['1.1.1.1']
-
     def setUp(self) -> None:
-        self.mtr = MTR(self.ips)
+        self.ip = '1.1.1.1'
+        self.mtr_binary = '/usr/bin/mtr'
+        self.mtr = MTR(self.mtr_binary)
         return super().setUp()
 
     def tearDown(self) -> None:
         del self.mtr
+        del self.mtr_binary
+        del self.ip
         return super().tearDown()
 
-    def test_validate_ips_failed_ipv6(self):
-        """Ensure an IPv6 string doesn't work"""
+    def test_set_ip_to_ipv6_fails(self) -> None:
+        """
+        Assert raises ValueError when IPv6 is used
+        """
         ipv6 = 'fe80::a4f2:7f33:f8cd:6a0b'
-        self.assertFalse(self.mtr.validate_ips(ipv6))
+        with self.assertRaises(ValueError):
+            self.mtr.ip = ipv6
 
-    def test_validate_ips_failed_typo_ipv4(self):
-        """Ensure a typo'd IPv4 string doesn't work"""
+    def test_set_ip_to_random_string_fails(self) -> None:
+        """
+        Assert raises ValueError when random string is used
+        """
+        ip = 'some random ip goes here'
+        with self.assertRaises(ValueError):
+            self.mtr.ip = ip
+
+    def test_set_ip_to_typod_ipv4_fails(self) -> None:
+        """
+        Assert raises ValueError when typod ipv4 address is used
+        """
         ipv4 = '1.1.11'
-        self.assertFalse(self.mtr.validate_ips(ipv4))
+        with self.assertRaises(ValueError):
+            self.mtr.ip = ipv4
 
-    def test_validate_ips(self):
-        """Ensure a properly formatted IPv4 string works"""
-        ipv4 = '74.125.138.138'
-        self.assertTrue(self.mtr.validate_ips(ipv4))
+    def test_set_ip(self) -> None:
+        """
+        Assert setting ip to ipv4 address works
+        """
+        self.mtr.ip = self.ip
+        self.assertEqual(self.mtr.ip, self.ip)
 
     @patch('src.classes.mtr.subprocess.run', side_effect=CalledProcessError(
         **{
@@ -50,10 +68,12 @@ class TestMTR(unittest.TestCase):
     ))
     def test_run_mtr_failed_raised_error(self, mock):
         """Mock a subprocess.run call that raises the CalledProcessError"""
-        result = self.mtr.run_mtr(self.ips[0])
+        self.mtr.ip = self.ip
+        result = self.mtr.run_mtr()
         self.assertTrue(mock.called)
         self.assertFalse(result)
         self.assertRaises(CalledProcessError)
+        self.assertEqual(self.mtr.mtr_stdout, '')
         self.assertEqual(self.mtr.error, {
             'returncode': 1,
             'command': '/usr/bin/mtr --reprt --report-cyles 4 1.1.1.1',
@@ -70,16 +90,17 @@ class TestMTR(unittest.TestCase):
             'stdout': b'Start\n',
             'stderr': None,
         })
-        result = self.mtr.run_mtr(self.ips[0])
+        self.mtr.ip = self.ip
+        result = self.mtr.run_mtr()
         self.assertTrue(mock.called)
         self.assertTrue(result)
-        self.assertEqual(self.mtr.raw_output, 'Start\n')
+        self.assertEqual(self.mtr.mtr_stdout, 'Start\n')
 
     def test_parse_output_no_matching_lines(self):
         """If no regex matches, ensure we get an empty result"""
         output = 'This does not work\n'
-        self.mtr.raw_output = output
-        self.assertEqual(self.mtr.parse_output(), [])
+        self.mtr.mtr_stdout = output
+        self.assertEqual(self.mtr.trace, {})
 
     def test_parse_output_one_matching_line(self):
         """When only one line is matching in a list of multiple
@@ -91,17 +112,19 @@ HOST: benjaminz-thinkpad          Loss%   Snt   Last   Avg  Best  Wrst StDev\n
         output += """
   1.|-- 10.10.28.1                 0.0%     4    5.8  11.9   5.8  16.8   5.6\n
         """
-        self.mtr.raw_output = output
-        self.assertEqual(self.mtr.parse_output(), [{
-            'ip_addr': '10.10.28.1',
-            'loss': 0.0,
-            'sent': 4,
-            'last': 5.8,
-            'average': 11.9,
-            'best': 5.8,
-            'worst': 16.8,
-            'stdev': 5.6
-        }])
+        self.mtr.mtr_stdout = output
+        self.mtr.parse_mtr_stdout()
+        self.assertEqual(self.mtr.trace, {
+            '10.10.28.1': {
+                'loss': 0.0,
+                'sent': 4,
+                'last': 5.8,
+                'average': 11.9,
+                'best': 5.8,
+                'worst': 16.8,
+                'stdev': 5.6
+            }
+        })
 
     def test_parse_output(self):
         """Get a consistently parsed output"""
@@ -115,10 +138,10 @@ HOST: benjaminz-thinkpad          Loss%   Snt   Last   Avg  Best  Wrst StDev\n
         output += """
   2.|-- 192.168.1.254              0.0%     4    8.5  10.9   8.5  14.4   2.6\n
         """
-        self.mtr.raw_output = output
-        self.assertEqual(self.mtr.parse_output(), [
-            {
-                'ip_addr': '10.10.28.1',
+        self.mtr.mtr_stdout = output
+        self.mtr.parse_mtr_stdout()
+        self.assertEqual(self.mtr.trace, {
+            '10.10.28.1': {
                 'loss': 0.0,
                 'sent': 4,
                 'last': 5.8,
@@ -126,9 +149,7 @@ HOST: benjaminz-thinkpad          Loss%   Snt   Last   Avg  Best  Wrst StDev\n
                 'best': 5.8,
                 'worst': 16.8,
                 'stdev': 5.6
-            },
-            {
-                'ip_addr': '192.168.1.254',
+            }, '192.168.1.254': {
                 'loss': 0.0,
                 'sent': 4,
                 'last': 8.5,
@@ -136,8 +157,8 @@ HOST: benjaminz-thinkpad          Loss%   Snt   Last   Avg  Best  Wrst StDev\n
                 'best': 8.5,
                 'worst': 14.4,
                 'stdev': 2.6
-            },
-        ])
+            }
+        })
 
 
 if __name__ == '__main__':
