@@ -4,6 +4,7 @@ Gather statistics about all IPs in your route to a destination
 """
 
 import concurrent.futures
+import os
 import sys
 import yaml
 
@@ -49,6 +50,14 @@ def main() -> int:
 
     combined_traces = combine_traces(traces)
     averaged_traces = average_traces(combined_traces)
+
+    result = write_prometheus_file(config, averaged_traces)
+    if not result:
+        return -1
+
+    result = move_prometheus_file(config)
+    if not result:
+        return -1
 
     return 0
 
@@ -198,6 +207,67 @@ def average_traces(traces: dict) -> dict:
             average = round(sum(value) / len(value), 1)
             values[key] = average
     return traces
+
+
+def write_prometheus_file(config: dict, traces: dict) -> bool:
+    """
+    Write dicts to prometheus-formatted file for collection
+
+    :param config: The current configuration
+    :type config: dict
+    :param traces: A dictionary of all traces
+    :type traces: dict
+    :return: True if temp file was successfully created and written to,
+    False if the file could not be created or opened for writing
+    :rtype: bool
+    """
+    promfile = PromFile(config)
+    tempfile = os.path.join(promfile.temp_filepath, promfile.temp_filename)
+
+    lines = []
+    for ip_addr, objs in traces.items():
+        for name, value in objs.items():
+            items = [
+                'ping_stats{ip_addr="', ip_addr, '", stat="', name,
+                '"} ', str(value)
+            ]
+            lines.append(''.join(items))
+
+    try:
+        with open(tempfile, 'w', encoding='utf-8') as file:
+            file.write('\n'.join(lines))
+            file.write('\n')
+        return True
+
+    except PermissionError as e:
+        print(e)
+        return False
+
+    except OSError as e:
+        print(e)
+        return False
+
+
+def move_prometheus_file(config: dict) -> bool:
+    """
+    Move the temp prometheus file to the primary location
+
+    :param config: The current configuration
+    :type config: dict
+    :return: True if the temp file was successfully moved to the main file,
+    False if the temp file could not replace the main file
+    :rtype: bool
+    """
+    promfile = PromFile(config)
+    tempfile = os.path.join(promfile.temp_filepath, promfile.temp_filename)
+    mainfile = os.path.join(promfile.filepath, promfile.filename)
+
+    try:
+        os.replace(tempfile, mainfile)
+        return True
+    except OSError as e:
+        print(e)
+        return False
 
 
 if __name__ == '__main__':
