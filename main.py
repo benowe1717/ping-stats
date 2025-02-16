@@ -27,6 +27,7 @@ def main() -> int:
 
     mtr_binary = find_mtr()
     if not mtr_binary:
+        print('ERROR: Unable to locate the mtr binary in your path!')
         return -1
 
     try:
