@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>ping-stats.tests.test_mtr API documentation</title>
+<meta name="description" content="Unit Tests for the MTR() class">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ping-stats.tests.test_mtr</code></h1>
+</header>
+<section id="section-intro">
+<p>Unit Tests for the MTR() class</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="ping-stats.tests.test_mtr.TestMTR"><code class="flex name class">
+<span>class <span class="ident">TestMTR</span></span>
+<span>(</span><span>methodName='runTest')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TestMTR(unittest.TestCase):
+    &#34;&#34;&#34;
+    Unit Tests for the MTR() class
+    &#34;&#34;&#34;
+
+    def setUp(self) -&gt; None:
+        self.ip = &#39;1.1.1.1&#39;
+        self.mtr_binary = &#39;/usr/bin/mtr&#39;
+        self.mtr = MTR(self.mtr_binary)
+        return super().setUp()
+
+    def tearDown(self) -&gt; None:
+        del self.mtr
+        del self.mtr_binary
+        del self.ip
+        return super().tearDown()
+
+    def test_set_ip_to_ipv6_fails(self) -&gt; None:
+        &#34;&#34;&#34;
+        Assert raises ValueError when IPv6 is used
+        &#34;&#34;&#34;
+        ipv6 = &#39;fe80::a4f2:7f33:f8cd:6a0b&#39;
+        with self.assertRaises(ValueError):
+            self.mtr.ip = ipv6
+
+    def test_set_ip_to_random_string_fails(self) -&gt; None:
+        &#34;&#34;&#34;
+        Assert raises ValueError when random string is used
+        &#34;&#34;&#34;
+        ip = &#39;some random ip goes here&#39;
+        with self.assertRaises(ValueError):
+            self.mtr.ip = ip
+
+    def test_set_ip_to_typod_ipv4_fails(self) -&gt; None:
+        &#34;&#34;&#34;
+        Assert raises ValueError when typod ipv4 address is used
+        &#34;&#34;&#34;
+        ipv4 = &#39;1.1.11&#39;
+        with self.assertRaises(ValueError):
+            self.mtr.ip = ipv4
+
+    def test_set_ip(self) -&gt; None:
+        &#34;&#34;&#34;
+        Assert setting ip to ipv4 address works
+        &#34;&#34;&#34;
+        self.mtr.ip = self.ip
+        self.assertEqual(self.mtr.ip, self.ip)
+
+    @patch(&#39;src.classes.mtr.subprocess.run&#39;, side_effect=CalledProcessError(
+        **{
+            &#39;returncode&#39;: 1,
+            &#39;cmd&#39;: &#39;/usr/bin/mtr --reprt --report-cyles 4 1.1.1.1&#39;,
+            &#39;stderr&#39;: &#39;/usr/bin/mtr: unrecognized option&#39;,
+        }
+    ))
+    def test_run_mtr_failed_raised_error(self, mock):
+        &#34;&#34;&#34;Mock a subprocess.run call that raises the CalledProcessError&#34;&#34;&#34;
+        self.mtr.ip = self.ip
+        result = self.mtr.run_mtr()
+        self.assertTrue(mock.called)
+        self.assertFalse(result)
+        self.assertRaises(CalledProcessError)
+        self.assertEqual(self.mtr.mtr_stdout, &#39;&#39;)
+        self.assertEqual(self.mtr.error, {
+            &#39;returncode&#39;: 1,
+            &#39;command&#39;: &#39;/usr/bin/mtr --reprt --report-cyles 4 1.1.1.1&#39;,
+            &#39;stdout&#39;: None,
+            &#39;stderr&#39;: &#39;/usr/bin/mtr: unrecognized option&#39;,
+        })
+
+    @patch(&#39;src.classes.mtr.subprocess.run&#39;)
+    def test_run_mtr(self, mock):
+        &#34;&#34;&#34;Mock a subprocess.run call that is successful&#34;&#34;&#34;
+        mock.return_value = CompletedProcess(**{
+            &#39;returncode&#39;: 0,
+            &#39;args&#39;: &#39;/usr/bin/mtr --report --report-cycles 4 1.1.1.1&#39;,
+            &#39;stdout&#39;: b&#39;Start\n&#39;,
+            &#39;stderr&#39;: None,
+        })
+        self.mtr.ip = self.ip
+        result = self.mtr.run_mtr()
+        self.assertTrue(mock.called)
+        self.assertTrue(result)
+        self.assertEqual(self.mtr.mtr_stdout, &#39;Start\n&#39;)
+
+    def test_parse_output_no_matching_lines(self):
+        &#34;&#34;&#34;If no regex matches, ensure we get an empty result&#34;&#34;&#34;
+        output = &#39;This does not work\n&#39;
+        self.mtr.mtr_stdout = output
+        self.assertEqual(self.mtr.trace, {})
+
+    def test_parse_output_one_matching_line(self):
+        &#34;&#34;&#34;When only one line is matching in a list of multiple
+        ensure only that line is present in the results&#34;&#34;&#34;
+        output = &#39;Start: 2025-01-23T16:48:05-0500\n&#39;
+        output += &#34;&#34;&#34;
+HOST: benjaminz-thinkpad          Loss%   Snt   Last   Avg  Best  Wrst StDev\n
+        &#34;&#34;&#34;
+        output += &#34;&#34;&#34;
+  1.|-- 10.10.28.1                 0.0%     4    5.8  11.9   5.8  16.8   5.6\n
+        &#34;&#34;&#34;
+        self.mtr.mtr_stdout = output
+        self.mtr.parse_mtr_stdout()
+        self.assertEqual(self.mtr.trace, {
+            &#39;10.10.28.1&#39;: {
+                &#39;loss&#39;: 0.0,
+                &#39;sent&#39;: 4,
+                &#39;last&#39;: 5.8,
+                &#39;average&#39;: 11.9,
+                &#39;best&#39;: 5.8,
+                &#39;worst&#39;: 16.8,
+                &#39;stdev&#39;: 5.6
+            }
+        })
+
+    def test_parse_output(self):
+        &#34;&#34;&#34;Get a consistently parsed output&#34;&#34;&#34;
+        output = &#39;Start: 2025-01-23T16:48:05-0500\n&#39;
+        output += &#34;&#34;&#34;
+HOST: benjaminz-thinkpad          Loss%   Snt   Last   Avg  Best  Wrst StDev\n
+        &#34;&#34;&#34;
+        output += &#34;&#34;&#34;
+  1.|-- 10.10.28.1                 0.0%     4    5.8  11.9   5.8  16.8   5.6\n
+        &#34;&#34;&#34;
+        output += &#34;&#34;&#34;
+  2.|-- 192.168.1.254              0.0%     4    8.5  10.9   8.5  14.4   2.6\n
+        &#34;&#34;&#34;
+        self.mtr.mtr_stdout = output
+        self.mtr.parse_mtr_stdout()
+        self.assertEqual(self.mtr.trace, {
+            &#39;10.10.28.1&#39;: {
+                &#39;loss&#39;: 0.0,
+                &#39;sent&#39;: 4,
+                &#39;last&#39;: 5.8,
+                &#39;average&#39;: 11.9,
+                &#39;best&#39;: 5.8,
+                &#39;worst&#39;: 16.8,
+                &#39;stdev&#39;: 5.6
+            }, &#39;192.168.1.254&#39;: {
+                &#39;loss&#39;: 0.0,
+                &#39;sent&#39;: 4,
+                &#39;last&#39;: 8.5,
+                &#39;average&#39;: 10.9,
+                &#39;best&#39;: 8.5,
+                &#39;worst&#39;: 14.4,
+                &#39;stdev&#39;: 2.6
+            }
+        })</code></pre>
+</details>
+<div class="desc"><p>Unit Tests for the MTR() class</p>
+<p>Create an instance of the class that will use the named test
+method when executed. Raises a ValueError if the instance does
+not have a method with the specified name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>unittest.case.TestCase</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="ping-stats.tests.test_mtr.TestMTR.setUp"><code class="name flex">
+<span>def <span class="ident">setUp</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setUp(self) -&gt; None:
+    self.ip = &#39;1.1.1.1&#39;
+    self.mtr_binary = &#39;/usr/bin/mtr&#39;
+    self.mtr = MTR(self.mtr_binary)
+    return super().setUp()</code></pre>
+</details>
+<div class="desc"><p>Hook method for setting up the test fixture before exercising it.</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.tearDown"><code class="name flex">
+<span>def <span class="ident">tearDown</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tearDown(self) -&gt; None:
+    del self.mtr
+    del self.mtr_binary
+    del self.ip
+    return super().tearDown()</code></pre>
+</details>
+<div class="desc"><p>Hook method for deconstructing the test fixture after testing it.</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.test_parse_output"><code class="name flex">
+<span>def <span class="ident">test_parse_output</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">    def test_parse_output(self):
+        &#34;&#34;&#34;Get a consistently parsed output&#34;&#34;&#34;
+        output = &#39;Start: 2025-01-23T16:48:05-0500\n&#39;
+        output += &#34;&#34;&#34;
+HOST: benjaminz-thinkpad          Loss%   Snt   Last   Avg  Best  Wrst StDev\n
+        &#34;&#34;&#34;
+        output += &#34;&#34;&#34;
+  1.|-- 10.10.28.1                 0.0%     4    5.8  11.9   5.8  16.8   5.6\n
+        &#34;&#34;&#34;
+        output += &#34;&#34;&#34;
+  2.|-- 192.168.1.254              0.0%     4    8.5  10.9   8.5  14.4   2.6\n
+        &#34;&#34;&#34;
+        self.mtr.mtr_stdout = output
+        self.mtr.parse_mtr_stdout()
+        self.assertEqual(self.mtr.trace, {
+            &#39;10.10.28.1&#39;: {
+                &#39;loss&#39;: 0.0,
+                &#39;sent&#39;: 4,
+                &#39;last&#39;: 5.8,
+                &#39;average&#39;: 11.9,
+                &#39;best&#39;: 5.8,
+                &#39;worst&#39;: 16.8,
+                &#39;stdev&#39;: 5.6
+            }, &#39;192.168.1.254&#39;: {
+                &#39;loss&#39;: 0.0,
+                &#39;sent&#39;: 4,
+                &#39;last&#39;: 8.5,
+                &#39;average&#39;: 10.9,
+                &#39;best&#39;: 8.5,
+                &#39;worst&#39;: 14.4,
+                &#39;stdev&#39;: 2.6
+            }
+        })</code></pre>
+</details>
+<div class="desc"><p>Get a consistently parsed output</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.test_parse_output_no_matching_lines"><code class="name flex">
+<span>def <span class="ident">test_parse_output_no_matching_lines</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_parse_output_no_matching_lines(self):
+    &#34;&#34;&#34;If no regex matches, ensure we get an empty result&#34;&#34;&#34;
+    output = &#39;This does not work\n&#39;
+    self.mtr.mtr_stdout = output
+    self.assertEqual(self.mtr.trace, {})</code></pre>
+</details>
+<div class="desc"><p>If no regex matches, ensure we get an empty result</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.test_parse_output_one_matching_line"><code class="name flex">
+<span>def <span class="ident">test_parse_output_one_matching_line</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">    def test_parse_output_one_matching_line(self):
+        &#34;&#34;&#34;When only one line is matching in a list of multiple
+        ensure only that line is present in the results&#34;&#34;&#34;
+        output = &#39;Start: 2025-01-23T16:48:05-0500\n&#39;
+        output += &#34;&#34;&#34;
+HOST: benjaminz-thinkpad          Loss%   Snt   Last   Avg  Best  Wrst StDev\n
+        &#34;&#34;&#34;
+        output += &#34;&#34;&#34;
+  1.|-- 10.10.28.1                 0.0%     4    5.8  11.9   5.8  16.8   5.6\n
+        &#34;&#34;&#34;
+        self.mtr.mtr_stdout = output
+        self.mtr.parse_mtr_stdout()
+        self.assertEqual(self.mtr.trace, {
+            &#39;10.10.28.1&#39;: {
+                &#39;loss&#39;: 0.0,
+                &#39;sent&#39;: 4,
+                &#39;last&#39;: 5.8,
+                &#39;average&#39;: 11.9,
+                &#39;best&#39;: 5.8,
+                &#39;worst&#39;: 16.8,
+                &#39;stdev&#39;: 5.6
+            }
+        })</code></pre>
+</details>
+<div class="desc"><p>When only one line is matching in a list of multiple
+ensure only that line is present in the results</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.test_run_mtr"><code class="name flex">
+<span>def <span class="ident">test_run_mtr</span></span>(<span>self, mock)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@patch(&#39;src.classes.mtr.subprocess.run&#39;)
+def test_run_mtr(self, mock):
+    &#34;&#34;&#34;Mock a subprocess.run call that is successful&#34;&#34;&#34;
+    mock.return_value = CompletedProcess(**{
+        &#39;returncode&#39;: 0,
+        &#39;args&#39;: &#39;/usr/bin/mtr --report --report-cycles 4 1.1.1.1&#39;,
+        &#39;stdout&#39;: b&#39;Start\n&#39;,
+        &#39;stderr&#39;: None,
+    })
+    self.mtr.ip = self.ip
+    result = self.mtr.run_mtr()
+    self.assertTrue(mock.called)
+    self.assertTrue(result)
+    self.assertEqual(self.mtr.mtr_stdout, &#39;Start\n&#39;)</code></pre>
+</details>
+<div class="desc"><p>Mock a subprocess.run call that is successful</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.test_run_mtr_failed_raised_error"><code class="name flex">
+<span>def <span class="ident">test_run_mtr_failed_raised_error</span></span>(<span>self, mock)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@patch(&#39;src.classes.mtr.subprocess.run&#39;, side_effect=CalledProcessError(
+    **{
+        &#39;returncode&#39;: 1,
+        &#39;cmd&#39;: &#39;/usr/bin/mtr --reprt --report-cyles 4 1.1.1.1&#39;,
+        &#39;stderr&#39;: &#39;/usr/bin/mtr: unrecognized option&#39;,
+    }
+))
+def test_run_mtr_failed_raised_error(self, mock):
+    &#34;&#34;&#34;Mock a subprocess.run call that raises the CalledProcessError&#34;&#34;&#34;
+    self.mtr.ip = self.ip
+    result = self.mtr.run_mtr()
+    self.assertTrue(mock.called)
+    self.assertFalse(result)
+    self.assertRaises(CalledProcessError)
+    self.assertEqual(self.mtr.mtr_stdout, &#39;&#39;)
+    self.assertEqual(self.mtr.error, {
+        &#39;returncode&#39;: 1,
+        &#39;command&#39;: &#39;/usr/bin/mtr --reprt --report-cyles 4 1.1.1.1&#39;,
+        &#39;stdout&#39;: None,
+        &#39;stderr&#39;: &#39;/usr/bin/mtr: unrecognized option&#39;,
+    })</code></pre>
+</details>
+<div class="desc"><p>Mock a subprocess.run call that raises the CalledProcessError</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.test_set_ip"><code class="name flex">
+<span>def <span class="ident">test_set_ip</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_set_ip(self) -&gt; None:
+    &#34;&#34;&#34;
+    Assert setting ip to ipv4 address works
+    &#34;&#34;&#34;
+    self.mtr.ip = self.ip
+    self.assertEqual(self.mtr.ip, self.ip)</code></pre>
+</details>
+<div class="desc"><p>Assert setting ip to ipv4 address works</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.test_set_ip_to_ipv6_fails"><code class="name flex">
+<span>def <span class="ident">test_set_ip_to_ipv6_fails</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_set_ip_to_ipv6_fails(self) -&gt; None:
+    &#34;&#34;&#34;
+    Assert raises ValueError when IPv6 is used
+    &#34;&#34;&#34;
+    ipv6 = &#39;fe80::a4f2:7f33:f8cd:6a0b&#39;
+    with self.assertRaises(ValueError):
+        self.mtr.ip = ipv6</code></pre>
+</details>
+<div class="desc"><p>Assert raises ValueError when IPv6 is used</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.test_set_ip_to_random_string_fails"><code class="name flex">
+<span>def <span class="ident">test_set_ip_to_random_string_fails</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_set_ip_to_random_string_fails(self) -&gt; None:
+    &#34;&#34;&#34;
+    Assert raises ValueError when random string is used
+    &#34;&#34;&#34;
+    ip = &#39;some random ip goes here&#39;
+    with self.assertRaises(ValueError):
+        self.mtr.ip = ip</code></pre>
+</details>
+<div class="desc"><p>Assert raises ValueError when random string is used</p></div>
+</dd>
+<dt id="ping-stats.tests.test_mtr.TestMTR.test_set_ip_to_typod_ipv4_fails"><code class="name flex">
+<span>def <span class="ident">test_set_ip_to_typod_ipv4_fails</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_set_ip_to_typod_ipv4_fails(self) -&gt; None:
+    &#34;&#34;&#34;
+    Assert raises ValueError when typod ipv4 address is used
+    &#34;&#34;&#34;
+    ipv4 = &#39;1.1.11&#39;
+    with self.assertRaises(ValueError):
+        self.mtr.ip = ipv4</code></pre>
+</details>
+<div class="desc"><p>Assert raises ValueError when typod ipv4 address is used</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ping-stats.tests" href="index.html">ping-stats.tests</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="ping-stats.tests.test_mtr.TestMTR" href="#ping-stats.tests.test_mtr.TestMTR">TestMTR</a></code></h4>
+<ul class="">
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.setUp" href="#ping-stats.tests.test_mtr.TestMTR.setUp">setUp</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.tearDown" href="#ping-stats.tests.test_mtr.TestMTR.tearDown">tearDown</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.test_parse_output" href="#ping-stats.tests.test_mtr.TestMTR.test_parse_output">test_parse_output</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.test_parse_output_no_matching_lines" href="#ping-stats.tests.test_mtr.TestMTR.test_parse_output_no_matching_lines">test_parse_output_no_matching_lines</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.test_parse_output_one_matching_line" href="#ping-stats.tests.test_mtr.TestMTR.test_parse_output_one_matching_line">test_parse_output_one_matching_line</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.test_run_mtr" href="#ping-stats.tests.test_mtr.TestMTR.test_run_mtr">test_run_mtr</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.test_run_mtr_failed_raised_error" href="#ping-stats.tests.test_mtr.TestMTR.test_run_mtr_failed_raised_error">test_run_mtr_failed_raised_error</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.test_set_ip" href="#ping-stats.tests.test_mtr.TestMTR.test_set_ip">test_set_ip</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.test_set_ip_to_ipv6_fails" href="#ping-stats.tests.test_mtr.TestMTR.test_set_ip_to_ipv6_fails">test_set_ip_to_ipv6_fails</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.test_set_ip_to_random_string_fails" href="#ping-stats.tests.test_mtr.TestMTR.test_set_ip_to_random_string_fails">test_set_ip_to_random_string_fails</a></code></li>
+<li><code><a title="ping-stats.tests.test_mtr.TestMTR.test_set_ip_to_typod_ipv4_fails" href="#ping-stats.tests.test_mtr.TestMTR.test_set_ip_to_typod_ipv4_fails">test_set_ip_to_typod_ipv4_fails</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>
