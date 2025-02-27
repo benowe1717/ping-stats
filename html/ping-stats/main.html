@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>ping-stats.main API documentation</title>
+<meta name="description" content="Gather statistics about all IPs in your route to a destination">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ping-stats.main</code></h1>
+</header>
+<section id="section-intro">
+<p>Gather statistics about all IPs in your route to a destination</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="ping-stats.main.average_traces"><code class="name flex">
+<span>def <span class="ident">average_traces</span></span>(<span>traces: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def average_traces(traces: dict) -&gt; dict:
+    &#34;&#34;&#34;
+    Iterate over each trace, represented by a dictionary, and average out
+    all values
+
+    :param traces: A dictionary of all traces
+    :type traces: dict
+    :return: A dictionary of all traces with averaged values
+    :rtype: dict
+    &#34;&#34;&#34;
+    for _, values in traces.items():
+        for key, value in values.items():
+            average = round(sum(value) / len(value), 1)
+            values[key] = average
+    return traces</code></pre>
+</details>
+<div class="desc"><p>Iterate over each trace, represented by a dictionary, and average out
+all values</p>
+<p>:param traces: A dictionary of all traces
+:type traces: dict
+:return: A dictionary of all traces with averaged values
+:rtype: dict</p></div>
+</dd>
+<dt id="ping-stats.main.combine_traces"><code class="name flex">
+<span>def <span class="ident">combine_traces</span></span>(<span>traces: list) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def combine_traces(traces: list) -&gt; dict:
+    &#34;&#34;&#34;
+    Take in a list of dicts, where the list represents all traces, and each
+    item in the list is a trace represented in dictionary format.
+    Return a dictionary where each key represents a unique IP and
+    contains all values from all traces against that IP
+
+    :param traces: The list of traces
+    :type traces: list
+    :return: A dictionary containing each combined trace
+    :rtype: dict
+    &#34;&#34;&#34;
+    combined_traces = {}
+    for trace in traces:
+        for ip_addr, values in trace.items():
+            if ip_addr not in combined_traces:
+                combined_traces.update({ip_addr: {}})
+
+            for key, value in values.items():
+                try:
+                    combined_traces[ip_addr][key].append(value)
+                except KeyError:
+                    combined_traces[ip_addr][key] = [value]
+
+    return combined_traces</code></pre>
+</details>
+<div class="desc"><p>Take in a list of dicts, where the list represents all traces, and each
+item in the list is a trace represented in dictionary format.
+Return a dictionary where each key represents a unique IP and
+contains all values from all traces against that IP</p>
+<p>:param traces: The list of traces
+:type traces: list
+:return: A dictionary containing each combined trace
+:rtype: dict</p></div>
+</dd>
+<dt id="ping-stats.main.find_mtr"><code class="name flex">
+<span>def <span class="ident">find_mtr</span></span>(<span>) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_mtr() -&gt; str:
+    &#34;&#34;&#34;
+    Attempt to locate the full filepath to the mtr binary
+
+    :return: The full filepath to the mtr binary, or empty if the binary
+    cannot be located
+    :rtype: str
+    &#34;&#34;&#34;
+    which = Which()
+    result = which.find_command(&#39;mtr&#39;)
+    if not result:
+        return &#39;&#39;
+    return which.command</code></pre>
+</details>
+<div class="desc"><p>Attempt to locate the full filepath to the mtr binary</p>
+<p>:return: The full filepath to the mtr binary, or empty if the binary
+cannot be located
+:rtype: str</p></div>
+</dd>
+<dt id="ping-stats.main.get_config_file"><code class="name flex">
+<span>def <span class="ident">get_config_file</span></span>(<span>parseargs: src.classes.parseargs.ParseArgs) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_config_file(parseargs: ParseArgs) -&gt; str:
+    &#34;&#34;&#34;
+    Find the config_file and set it
+
+    :param parseargs: The reference to the current ParseArgs class
+    :type parseargs: ParseArgs
+    :return: The full filepath to the config file if given by the user or
+    the default config file
+    :rtype: str
+    &#34;&#34;&#34;
+    if parseargs.config_file:
+        return parseargs.config_file
+    return constants.CONFIG_FILE</code></pre>
+</details>
+<div class="desc"><p>Find the config_file and set it</p>
+<p>:param parseargs: The reference to the current ParseArgs class
+:type parseargs: ParseArgs
+:return: The full filepath to the config file if given by the user or
+the default config file
+:rtype: str</p></div>
+</dd>
+<dt id="ping-stats.main.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main() -&gt; int:
+    &#34;&#34;&#34;Main program loop&#34;&#34;&#34;
+    args = sys.argv
+    parseargs = ParseArgs(args)
+    config_file = get_config_file(parseargs)
+    config = read_config_file(config_file)
+    result = prometheus_setup(config)
+    if not result:
+        return -1
+
+    mtr_binary = find_mtr()
+    if not mtr_binary:
+        print(&#39;ERROR: Unable to locate the mtr binary in your path!&#39;)
+        return -1
+
+    try:
+        ips = config[&#39;mtr&#39;][&#39;ips&#39;]
+
+    except KeyError as e:
+        print(e)
+        return -1
+
+    traces = []
+    with concurrent.futures.ThreadPoolExecutor(
+            max_workers=len(ips)) as executor:
+        future_to_ip = {
+            executor.submit(
+                run_mtr,
+                mtr_binary,
+                ip): ip for ip in ips}
+        for future in concurrent.futures.as_completed(future_to_ip):
+            data = future.result()
+            traces.append(data)
+
+    combined_traces = combine_traces(traces)
+    averaged_traces = average_traces(combined_traces)
+
+    result = write_prometheus_file(config, averaged_traces)
+    if not result:
+        return -1
+
+    result = move_prometheus_file(config)
+    if not result:
+        return -1
+
+    return 0</code></pre>
+</details>
+<div class="desc"><p>Main program loop</p></div>
+</dd>
+<dt id="ping-stats.main.move_prometheus_file"><code class="name flex">
+<span>def <span class="ident">move_prometheus_file</span></span>(<span>config: dict) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def move_prometheus_file(config: dict) -&gt; bool:
+    &#34;&#34;&#34;
+    Move the temp prometheus file to the primary location
+
+    :param config: The current configuration
+    :type config: dict
+    :return: True if the temp file was successfully moved to the main file,
+    False if the temp file could not replace the main file
+    :rtype: bool
+    &#34;&#34;&#34;
+    promfile = PromFile(config)
+    tempfile = os.path.join(promfile.temp_filepath, promfile.temp_filename)
+    mainfile = os.path.join(promfile.filepath, promfile.filename)
+
+    try:
+        os.replace(tempfile, mainfile)
+        return True
+    except OSError as e:
+        print(e)
+        return False</code></pre>
+</details>
+<div class="desc"><p>Move the temp prometheus file to the primary location</p>
+<p>:param config: The current configuration
+:type config: dict
+:return: True if the temp file was successfully moved to the main file,
+False if the temp file could not replace the main file
+:rtype: bool</p></div>
+</dd>
+<dt id="ping-stats.main.prometheus_setup"><code class="name flex">
+<span>def <span class="ident">prometheus_setup</span></span>(<span>config: dict) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prometheus_setup(config: dict) -&gt; bool:
+    &#34;&#34;&#34;
+    Ensure all required Prometheus directories are present and create them
+    if they are not present
+
+    :param config: A dictionary containing the current configuration
+    :type config: dict
+    :return: True if all Prometheus directories are present,
+    False if directories are not present
+    :rtype: bool
+    &#34;&#34;&#34;
+    try:
+        promfile = PromFile(config)
+
+        result = promfile.create_filepath()
+        if not result:
+            return False
+
+        result = promfile.create_temp_filepath()
+        if not result:
+            return False
+
+        return True
+
+    except KeyError as e:
+        print(e)
+        return False
+
+    except ValueError as e:
+        print(e)
+        return False</code></pre>
+</details>
+<div class="desc"><p>Ensure all required Prometheus directories are present and create them
+if they are not present</p>
+<p>:param config: A dictionary containing the current configuration
+:type config: dict
+:return: True if all Prometheus directories are present,
+False if directories are not present
+:rtype: bool</p></div>
+</dd>
+<dt id="ping-stats.main.read_config_file"><code class="name flex">
+<span>def <span class="ident">read_config_file</span></span>(<span>config_file: str) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_config_file(config_file: str) -&gt; dict:
+    &#34;&#34;&#34;
+    Read the YAML config file and return a dictionary
+
+    :param config_file: The full filepath and filename to a YAML config file
+    :type config_file: str
+    :return: A dictionary containing the data from the YAML file
+    :rtype: dict
+    &#34;&#34;&#34;
+    with open(config_file, &#39;r&#39;, encoding=&#39;utf-8&#39;) as file:
+        data = yaml.safe_load(file)
+        return data</code></pre>
+</details>
+<div class="desc"><p>Read the YAML config file and return a dictionary</p>
+<p>:param config_file: The full filepath and filename to a YAML config file
+:type config_file: str
+:return: A dictionary containing the data from the YAML file
+:rtype: dict</p></div>
+</dd>
+<dt id="ping-stats.main.run_mtr"><code class="name flex">
+<span>def <span class="ident">run_mtr</span></span>(<span>mtr_binary: str, ip: str) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_mtr(mtr_binary: str, ip: str) -&gt; dict:
+    &#34;&#34;&#34;
+    Using the MTR() class, run a traceroute to the given IP Address using the
+    given mtr binary and return the formatted trace
+
+    :param mtr_binary: The full filepath to the mtr binary
+    :type mtr_binary: str
+    :param ip: The IPv4 Address to provide to the mtr binary
+    :type ip: str
+    :return: The trace dictionary if the trace was successful,
+    an empty dictionary if the trace failed
+    :rtype: dict
+    &#34;&#34;&#34;
+    mtr = MTR(mtr_binary)
+    mtr.ip = ip
+    result = mtr.run_mtr()
+    if not result:
+        return {}
+
+    result = mtr.parse_mtr_stdout()
+    if not result:
+        return {}
+
+    return mtr.trace</code></pre>
+</details>
+<div class="desc"><p>Using the MTR() class, run a traceroute to the given IP Address using the
+given mtr binary and return the formatted trace</p>
+<p>:param mtr_binary: The full filepath to the mtr binary
+:type mtr_binary: str
+:param ip: The IPv4 Address to provide to the mtr binary
+:type ip: str
+:return: The trace dictionary if the trace was successful,
+an empty dictionary if the trace failed
+:rtype: dict</p></div>
+</dd>
+<dt id="ping-stats.main.write_prometheus_file"><code class="name flex">
+<span>def <span class="ident">write_prometheus_file</span></span>(<span>config: dict, traces: dict) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_prometheus_file(config: dict, traces: dict) -&gt; bool:
+    &#34;&#34;&#34;
+    Write dicts to prometheus-formatted file for collection
+
+    :param config: The current configuration
+    :type config: dict
+    :param traces: A dictionary of all traces
+    :type traces: dict
+    :return: True if temp file was successfully created and written to,
+    False if the file could not be created or opened for writing
+    :rtype: bool
+    &#34;&#34;&#34;
+    promfile = PromFile(config)
+    tempfile = os.path.join(promfile.temp_filepath, promfile.temp_filename)
+
+    lines = []
+    for ip_addr, objs in traces.items():
+        for name, value in objs.items():
+            items = [
+                &#39;ping_stats{ip_addr=&#34;&#39;, ip_addr, &#39;&#34;, stat=&#34;&#39;, name,
+                &#39;&#34;} &#39;, str(value)
+            ]
+            lines.append(&#39;&#39;.join(items))
+
+    try:
+        with open(tempfile, &#39;w&#39;, encoding=&#39;utf-8&#39;) as file:
+            file.write(&#39;\n&#39;.join(lines))
+            file.write(&#39;\n&#39;)
+        return True
+
+    except PermissionError as e:
+        print(e)
+        return False
+
+    except OSError as e:
+        print(e)
+        return False</code></pre>
+</details>
+<div class="desc"><p>Write dicts to prometheus-formatted file for collection</p>
+<p>:param config: The current configuration
+:type config: dict
+:param traces: A dictionary of all traces
+:type traces: dict
+:return: True if temp file was successfully created and written to,
+False if the file could not be created or opened for writing
+:rtype: bool</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ping-stats" href="index.html">ping-stats</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="ping-stats.main.average_traces" href="#ping-stats.main.average_traces">average_traces</a></code></li>
+<li><code><a title="ping-stats.main.combine_traces" href="#ping-stats.main.combine_traces">combine_traces</a></code></li>
+<li><code><a title="ping-stats.main.find_mtr" href="#ping-stats.main.find_mtr">find_mtr</a></code></li>
+<li><code><a title="ping-stats.main.get_config_file" href="#ping-stats.main.get_config_file">get_config_file</a></code></li>
+<li><code><a title="ping-stats.main.main" href="#ping-stats.main.main">main</a></code></li>
+<li><code><a title="ping-stats.main.move_prometheus_file" href="#ping-stats.main.move_prometheus_file">move_prometheus_file</a></code></li>
+<li><code><a title="ping-stats.main.prometheus_setup" href="#ping-stats.main.prometheus_setup">prometheus_setup</a></code></li>
+<li><code><a title="ping-stats.main.read_config_file" href="#ping-stats.main.read_config_file">read_config_file</a></code></li>
+<li><code><a title="ping-stats.main.run_mtr" href="#ping-stats.main.run_mtr">run_mtr</a></code></li>
+<li><code><a title="ping-stats.main.write_prometheus_file" href="#ping-stats.main.write_prometheus_file">write_prometheus_file</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

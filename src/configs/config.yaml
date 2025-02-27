@@ -1,0 +1,17 @@
+# Config for Ping Stats (ping_stats.py)
+#
+# This is a YAML file: see [1] for a quick introduction. Note in particular
+# that *indentation is important*: all the elements of a list or dictionary
+# should have the same indentation.
+#
+# [1] https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+
+prometheus:
+  filepath: '/var/prometheus'
+  temp_filepath: '/tmp/prometheus'
+  filename: 'ping_stats.prom'
+  # temp_filename: 'ping_stats.temp.prom'
+
+mtr:
+  ips:
+    - 127.0.0.1
